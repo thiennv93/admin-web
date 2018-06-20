@@ -47,11 +47,11 @@
             <version>1.2</version>
         </dependency>
         <!-- CDI -->
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>1.2</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>javax.enterprise</groupId>-->
+        <!--<artifactId>cdi-api</artifactId>-->
+        <!--<version>1.2</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet</artifactId>
@@ -74,16 +74,16 @@
 
         <!-- API do JPA e EJB para o Admin Template (View de OptimisticLockException)
             TODO: Fork para depender apenas de Servlet/JSF -->
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.0-api</artifactId>
-            <version>1.0.1.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.ejb</groupId>
-            <artifactId>javax.ejb-api</artifactId>
-            <version>3.2</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate.javax.persistence</groupId>-->
+            <!--<artifactId>hibernate-jpa-2.0-api</artifactId>-->
+            <!--<version>1.0.1.Final</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>javax.ejb</groupId>-->
+            <!--<artifactId>javax.ejb-api</artifactId>-->
+            <!--<version>3.2</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
