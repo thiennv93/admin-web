@@ -4,7 +4,6 @@ import com.vietfintex.adminfaces.starter.infra.model.Filter;
 import com.vietfintex.adminfaces.starter.model.Car;
 import com.vietfintex.adminfaces.starter.service.CarService;
 import com.github.adminfaces.template.exception.BusinessException;
-import com.vietfintex.adminfaces.starter.infra.model.SortOrder;
 import com.vietfintex.adminfaces.starter.util.Utils;
 import org.omnifaces.cdi.ViewScoped;
 import org.primefaces.model.LazyDataModel;
@@ -41,35 +40,35 @@ public class CarListMB implements Serializable {
 
     @PostConstruct
     public void initDataModel() {
-        cars = new LazyDataModel<Car>() {
-            @Override
-            public List<Car> load(int first, int pageSize,
-                                  String sortField, SortOrder sortOrder,
-                                  Map<String, Object> filters) {
-                SortOrder order = null;
-                if (sortOrder != null) {
-                    order = sortOrder.equals(SortOrder.ASCENDING) ? SortOrder.ASCENDING
-                            : sortOrder.equals(SortOrder.DESCENDING) ? SortOrder.DESCENDING
-                            : SortOrder.UNSORTED;
-                }
-                filter.setFirst(first).setPageSize(pageSize)
-                        .setSortField(sortField).setSortOrder(order)
-                        .setParams(filters);
-                List<Car> list = carService.paginate(filter);
-                setRowCount((int) carService.count(filter));
-                return list;
-            }
-
-            @Override
-            public int getRowCount() {
-                return super.getRowCount();
-            }
-
-            @Override
-            public Car getRowData(String key) {
-                return carService.findById(new Integer(key));
-            }
-        };
+//        cars = new LazyDataModel<Car>() {
+//            @Override
+//            public List<Car> load(int first, int pageSize,
+//                                  String sortField, SortOrder sortOrder,
+//                                  Map<String, Object> filters) {
+//                SortOrder order = null;
+//                if (sortOrder != null) {
+//                    order = sortOrder.equals(SortOrder.ASCENDING) ? SortOrder.ASCENDING
+//                            : sortOrder.equals(SortOrder.DESCENDING) ? SortOrder.DESCENDING
+//                            : SortOrder.UNSORTED;
+//                }
+//                filter.setFirst(first).setPageSize(pageSize)
+//                        .setSortField(sortField).setSortOrder(order)
+//                        .setParams(filters);
+//                List<Car> list = carService.paginate(filter);
+//                setRowCount((int) carService.count(filter));
+//                return list;
+//            }
+//
+//            @Override
+//            public int getRowCount() {
+//                return super.getRowCount();
+//            }
+//
+//            @Override
+//            public Car getRowData(String key) {
+//                return carService.findById(new Integer(key));
+//            }
+//        };
     }
 
     public void clear() {
