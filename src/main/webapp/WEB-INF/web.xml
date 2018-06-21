@@ -6,7 +6,8 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            /WEB-INF/dispatcher-servlet.xml
+            /WEB-INF/dispatcher-servlet.xml;
+            classpath:spring-security.xml;
             <!--/WEB-INF/spring-servlet.xml;-->
         </param-value>
     </context-param>
@@ -71,6 +72,10 @@
             <param-value>200</param-value>
         </init-param>
     </filter>
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
     <filter-mapping>
         <filter-name>gzipResponseFilter</filter-name>
         <servlet-name>Faces Servlet</servlet-name>
@@ -78,6 +83,13 @@
         <dispatcher>ERROR</dispatcher>
     </filter-mapping>
 
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
