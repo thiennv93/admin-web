@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface OrderRepo extends JpaRepository<Orders, Long> {
-    List<Orders> findTop10OrderByTimestamp();
 }

@@ -28,5 +28,5 @@
 	    </mvc:message-converters>
 	</mvc:annotation-driven>
 	<import resource="classpath:spring-data.xml"/>
-	<import resource="classpath:applicationContext.xml"/>
+	<!--<import resource="classpath:applicationContext.xml"/>-->
 </beans>

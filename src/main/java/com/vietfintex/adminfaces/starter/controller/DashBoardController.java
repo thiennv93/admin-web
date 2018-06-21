@@ -4,6 +4,7 @@ import com.vietfintex.adminfaces.starter.ApplicationContextProvider;
 import com.vietfintex.adminfaces.starter.persistence.model.Orders;
 import com.vietfintex.adminfaces.starter.persistence.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -14,10 +15,11 @@ import javax.faces.bean.*;
 import javax.faces.context.FacesContext;
 import java.util.List;
 
+@Component
+@ViewScoped
 @ManagedBean
-@SessionScoped
-//@Controller
 public class DashBoardController {
+    @Autowired
     private OrderService orderService;
     private List<Orders> orderLatestList;
 
@@ -25,8 +27,8 @@ public class DashBoardController {
 
     @PostConstruct
     public void init(){
-        orderService = ApplicationContextProvider.getApplicationContext().getBean(OrderService.class);
-        orderLatestList = orderService.findTop10OrderByTimestamp();
+//        orderService = ApplicationContextProvider.getApplicationContext().getBean(OrderService.class);
+        orderLatestList = orderService.findAll();
     }
 
     public List<Orders> getOrderLatestList() {

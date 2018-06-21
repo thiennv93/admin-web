@@ -13,8 +13,9 @@ public class OrderSeviceImpl implements OrderService {
     @Autowired
     private OrderRepo repository;
 
+
     @Override
-    public List<Orders> findTop10OrderByTimestamp() {
-        return repository.findTop10OrderByTimestamp();
+    public List<Orders> findAll() {
+        return repository.findAll();
     }
 }
