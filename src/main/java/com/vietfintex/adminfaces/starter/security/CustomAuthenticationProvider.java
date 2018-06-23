@@ -17,10 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by LamNV5 on 4/16/2015.
- */
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     private static Logger logger = Logger

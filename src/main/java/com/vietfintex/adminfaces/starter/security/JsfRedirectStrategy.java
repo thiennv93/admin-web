@@ -1,91 +1,101 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.vietfintex.adminfaces.starter.security;
 
-import com.vietfintex.adminfaces.starter.bean.URLBean;
-import com.vietfintex.adminfaces.starter.common.Const;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.security.web.session.InvalidSessionStrategy;
-import org.springframework.util.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.security.web.RedirectStrategy;
+import org.springframework.security.web.util.UrlUtils;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URL;
 
 /**
- 
+ * Based on code from DefaultDirectStrategy and
+ * https://gist.github.com/banterCZ/5160269
+ *
+ * @author mhewedy
+ *
  */
-public class JsfRedirectStrategy implements InvalidSessionStrategy {
+public class JsfRedirectStrategy implements RedirectStrategy {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
-    private static final String FACES_REQUEST_HEADER = "faces-request";
-    private String invalidSessionUrl;
+	private static final String FACES_REQUEST_HEADER = "faces-request";
 
-    @Autowired
-    ApplicationContext context;
-    /**
-     * {@inheritDoc}
-     * @param request
-     * @param response
-     * @throws IOException
-     * @throws javax.servlet.ServletException
-     */
-    @Override
-    public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	protected final Log logger = LogFactory.getLog(getClass());
 
-        boolean ajaxRedirect = "partial/ajax".equals(request.getHeader(FACES_REQUEST_HEADER));
-        if (ajaxRedirect) {
-            String contextPath = request.getContextPath();
-            String redirectUrl = contextPath + invalidSessionUrl;
-            logger.debug("Session expired due to ajax request, redirecting to '{}'", redirectUrl);
-            String referrer = request.getHeader("referer");
-            if(referrer!=null){
-                URL url = new URL(referrer);
-                URLBean urlBean = new URLBean();
-                urlBean.setTargetUrl(url.getPath());
-                request.getSession().setAttribute(Const.URL_BEAN,urlBean);
-            }
-            String ajaxRedirectXml = createAjaxRedirectXml(redirectUrl);
-            logger.debug("Ajax partial response to redirect: {}", ajaxRedirectXml);
-            response.setContentType("text/xml");
-            response.getWriter().write(ajaxRedirectXml);
-        } else {
-            String requestURI = getRequestUrl(request);
-            logger.debug("Session expired due to non-ajax request, starting a new session and redirect to requested url '{}'", requestURI);
-            request.getSession(true);
-            response.sendRedirect(requestURI);
-        }
+	private boolean contextRelative;
 
-    }
+	/**
+	 * Redirects the response to the supplied URL.
+	 * <p>
+	 * If <tt>contextRelative</tt> is set, the redirect value will be the value
+	 * after the request context path. Note that this will result in the loss of
+	 * protocol information (HTTP or HTTPS), so will cause problems if a
+	 * redirect is being performed to change to HTTPS, for example.
+	 */
+	public void sendRedirect(HttpServletRequest request,
+							 HttpServletResponse response, String url) throws IOException {
+		String redirectUrl = calculateRedirectUrl(request.getContextPath(), url);
+		redirectUrl = response.encodeRedirectURL(redirectUrl);
 
-    private String getRequestUrl(HttpServletRequest request) {
-        StringBuffer requestURL = request.getRequestURL();
+		boolean ajaxRedirect = "partial/ajax".equals(request
+				.getHeader(FACES_REQUEST_HEADER));
+		if (ajaxRedirect) {
 
-        String queryString = request.getQueryString();
-        if (StringUtils.hasText(queryString)) {
-            requestURL.append("?").append(queryString);
-        }
+			String ajaxRedirectXml = createAjaxRedirectXml(redirectUrl);
+			logger.debug("Ajax partial response to redirect: "
+					+ ajaxRedirectXml);
 
-        return requestURL.toString();
-    }
+			response.setContentType("text/xml");
+			response.getWriter().write(ajaxRedirectXml);
+		} else {
+			logger.debug("Non-ajax redirecting to '" + redirectUrl + "'");
+			response.sendRedirect(redirectUrl);
+		}
+	}
 
-    private String createAjaxRedirectXml(String redirectUrl) {
-        return new StringBuilder()
-                .append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-                .append("<partial-response><redirect url=\"")
-                .append(redirectUrl)
-                .append("\"></redirect></partial-response>")
-                .toString();
-    }
+	private String calculateRedirectUrl(String contextPath, String url) {
+		if (!UrlUtils.isAbsoluteUrl(url)) {
+			if (contextRelative) {
+				return url;
+			} else {
+				return contextPath + url;
+			}
+		}
 
-    public void setInvalidSessionUrl(String invalidSessionUrl) {
-        this.invalidSessionUrl = invalidSessionUrl;
-    }
+		// Full URL, including http(s)://
+
+		if (!contextRelative) {
+			return url;
+		}
+
+		// Calculate the relative URL from the fully qualified URL, minus the
+		// last
+		// occurrence of the scheme and base context.
+		url = url.substring(url.lastIndexOf("://") + 3); // strip off scheme
+		url = url.substring(url.indexOf(contextPath) + contextPath.length());
+
+		if (url.length() > 1 && url.charAt(0) == '/') {
+			url = url.substring(1);
+		}
+
+		return url;
+	}
+
+	/**
+	 * If <tt>true</tt>, causes any redirection URLs to be calculated minus the
+	 * protocol and context path (defaults to <tt>false</tt>).
+	 */
+	public void setContextRelative(boolean useRelativeContext) {
+		this.contextRelative = useRelativeContext;
+	}
+
+	// from https://gist.github.com/banterCZ/5160269
+	private String createAjaxRedirectXml(String redirectUrl) {
+		return new StringBuilder()
+				.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+				.append("<partial-response><redirect url=\"")
+				.append(redirectUrl)
+				.append("\"></redirect></partial-response>").toString();
+	}
+
 }

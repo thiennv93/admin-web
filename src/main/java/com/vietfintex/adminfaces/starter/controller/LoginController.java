@@ -1,9 +1,17 @@
 package com.vietfintex.adminfaces.starter.controller;
 
 
+import com.vietfintex.adminfaces.starter.util.Util;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.log4j.Logger;
-import org.omnifaces.cdi.ViewScoped;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.faces.bean.ManagedBean;
@@ -15,23 +23,50 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.IOException;
-import java.io.Serializable;
 
-//@Component
+@Component
 @ManagedBean
-@ViewScoped
+@RequestScoped
+@Scope("request")
 public class LoginController {
 
     private static final Logger logger = Logger.getLogger(LoginController.class);
-    public void login() throws IOException, ServletException {
 
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Setter
+    @Getter
+    private String username;
 
-        RequestDispatcher dispatcher = ((ServletRequest) context.getRequest()).getRequestDispatcher("/j_spring_security_check");
+    @Setter
+    @Getter
+    private String password;
 
-        dispatcher.forward((ServletRequest) context.getRequest(), (ServletResponse) context.getResponse());
+    public String login() throws IOException, ServletException {
+        try {
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(
+                            this.username, this.password));
 
-        FacesContext.getCurrentInstance().responseComplete();
+            SecurityContextHolder.getContext()
+                    .setAuthentication(authentication);
+
+        } catch (AuthenticationException ex) {
+            logger.equals(ex.getMessage());
+            Util.addMessage("Login Failed: " + ex.getMessage());
+            return "";
+        }
+
+        return Util.getSavedUrl() + "?faces-redirect=true";
+//
+//        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+//
+//        RequestDispatcher dispatcher = ((ServletRequest) context.getRequest()).getRequestDispatcher("/j_spring_security_check");
+//
+//        dispatcher.forward((ServletRequest) context.getRequest(), (ServletResponse) context.getResponse());
+//
+//        FacesContext.getCurrentInstance().responseComplete();
+//        return null;
     }
 
 //    public void login() {

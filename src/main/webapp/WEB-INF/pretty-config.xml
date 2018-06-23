@@ -6,7 +6,7 @@
     <!-- FW -->
     <url-mapping id="login">
         <pattern value="/login"/>
-        <view-id value="login.xhtml"/>
+        <view-id value="/login.xhtml"/>
     </url-mapping>
     <url-mapping id="logout">
         <pattern value="/logout"/>
