@@ -107,6 +107,12 @@
             <version>${jsf.version}</version>
         </dependency>
 
+        <!-- javax.inject -->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
+        </dependency>
         <!-- facelets -->
         <dependency>
             <groupId>com.sun.facelets</groupId>
@@ -148,16 +154,16 @@
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>
-        <dependency>
-            <groupId>org.ocpsoft.rewrite</groupId>
-            <artifactId>rewrite-servlet</artifactId>
-            <version>3.4.1.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ocpsoft.rewrite</groupId>
-            <artifactId>rewrite-config-prettyfaces</artifactId>
-            <version>3.4.1.Final</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.ocpsoft.rewrite</groupId>-->
+        <!--<artifactId>rewrite-servlet</artifactId>-->
+        <!--<version>3.4.1.Final</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.ocpsoft.rewrite</groupId>-->
+        <!--<artifactId>rewrite-config-prettyfaces</artifactId>-->
+        <!--<version>3.4.1.Final</version>-->
+        <!--</dependency>-->
 
         <!-- JSF API e RI -->
         <dependency>

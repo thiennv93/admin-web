@@ -18,7 +18,7 @@
     </url-mapping>
     <url-mapping id="refresh">
         <pattern value="/"/>
-        <view-id value="/index.jsf"/>
+        <view-id value="/index.xhtml"/>
     </url-mapping>
     <url-mapping id="loginSuccess">
         <pattern value="/home"/>
