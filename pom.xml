@@ -24,7 +24,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.vietfintex</groupId>
+            <groupId>com.vietfintex.core</groupId>
             <artifactId>admin-template</artifactId>
             <version>1.0</version>
         </dependency>
