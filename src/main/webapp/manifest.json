@@ -21,6 +21,6 @@
     "theme_color": "#3c8dbc",
     "background_color": "#ffffff",
     "scope": "/admin-starter/",
-    "start_url": "/admin-starter/index.xhtml",
+    "start_url": "/home",
     "display": "standalone"
 }
