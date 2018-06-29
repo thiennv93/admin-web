@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <display-name>Sample Invoice Application</display-name>
+    <!--<filter>-->
+        <!--<filter-name>SimpleFilter</filter-name>-->
+        <!--<filter-class>com.viettel.web.common.CharacterEncodingFilter</filter-class>-->
+    <!--</filter>-->
+
+
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+
+
+    <!--<filter-mapping>-->
+        <!--<filter-name>SimpleFilter</filter-name>-->
+        <!--<servlet-name>FacesServlet</servlet-name>-->
+        <!--<dispatcher>REQUEST</dispatcher>-->
+        <!--<dispatcher>FORWARD</dispatcher>-->
+    <!--</filter-mapping>-->
+
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+
+    <!--<filter>-->
+    <!--<filter-name>loggingFilter</filter-name>-->
+    <!--<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>-->
+    <!--<init-param>-->
+    <!--<param-name>targetBeanName</param-name>-->
+    <!--<param-value>loggingFilter</param-value>-->
+    <!--</init-param>-->
+    <!--</filter>-->
+
+    <!--<filter-mapping>-->
+    <!--<filter-name>loggingFilter</filter-name>-->
+    <!--<url-pattern>*.jsf</url-pattern>-->
+    <!--</filter-mapping>-->
+
+    <!--<context-param>-->
+        <!--<param-name>contextInitializerClasses</param-name>-->
+        <!--&lt;!&ndash;<param-value>com.viettel.fw.bean.CustomApplicationContextInitializer</param-value>&ndash;&gt;-->
+        <!--<param-value>org.springframework.context.ApplicationContextInitializer</param-value>-->
+    <!--</context-param>-->
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:spring-security.xml;
+            <!--classpath:applicationContext.xml-->
+        </param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.CONFIG_FILES</param-name>
+        <param-value>/WEB-INF/faces-config.xml</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <!--<param-value>spark-blue</param-value>-->
+        <param-value>admin</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>primefaces.FONT_AWESOME</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+
+    <!--LOG CONFIG-->
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:log4j.properties</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+    <!--LOG CONFIG-->
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+
+    <!-- Handler expired session -->
+    <listener>
+        <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+
+
+    <!--Thiendn1: Primefaces Performance Tuning-->
+    <context-param>
+        <param-name>org.ocpsoft.rewrite.config.CONFIG_RELOADING</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.ocpsoft.rewrite.annotation.BASE_PACKAGES</param-name>
+        <param-value>none</param-value>
+    </context-param>
+    <!--change mode DEVELOPMENT to Product-->
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Production</param-value>
+    </context-param>
+
+    <!--get lower page sizes and faster loading times-->
+    <context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>server</param-value>
+    </context-param>
+    <!--turn of the facelets refresh trigger in production environments-->
+    <context-param>
+        <param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
+        <param-value>-1</param-value>
+    </context-param>
+    <!--skip comment in HTML-->
+    <context-param>
+        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <!--limit number of views-->
+    <context-param>
+        <param-name>com.sun.faces.numberOfViewsInSession</param-name>
+        <param-value>30</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.numberOfLogicalViews</param-name>
+        <param-value>30</param-value>
+    </context-param>
+    <!--EH CACHE for p:cache-->
+    <context-param>
+        <param-name>primefaces.CACHE_PROVIDER</param-name>
+        <param-value>org.primefaces.cache.EHCacheProvider</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+
+    <context-param>
+        <param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>primefaces.SUBMIT</param-name>
+        <param-value>partial</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.RESET_VALUES</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.CLIENT_SIDE_VALIDATION</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+
+    <error-page>
+        <error-code>403</error-code>
+        <location>/pages/403.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/pages/404.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/pages/500.xhtml</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/pages/500.xhtml</location>
+    </error-page>
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/pages/expired.xhtml</location>
+    </error-page>
+    <error-page>
+        <exception-type>javax.persistence.OptimisticLockException</exception-type>
+        <location>/pages/optimistic.xhtml</location>
+    </error-page>
+    <context-param>
+        <param-name>primefaces.UPLOADER</param-name>
+        <param-value>commons</param-value>
+    </context-param>
+
+    <!--<listener>-->
+        <!--<listener-class>org.apache.commons.fileupload.servlet.FileCleanerCleanup</listener-class>-->
+    <!--</listener>-->
+
+    <!--<filter>-->
+        <!--<filter-name>PrimeFaces FileUpload Filter</filter-name>-->
+        <!--<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>-->
+    <!--</filter>-->
+
+    <!--<filter-mapping>-->
+        <!--<filter-name>PrimeFaces FileUpload Filter</filter-name>-->
+        <!--<servlet-name>FacesServlet</servlet-name>-->
+        <!--<dispatcher>REQUEST</dispatcher>-->
+        <!--<dispatcher>FORWARD</dispatcher>-->
+    <!--</filter-mapping>-->
+
+
+    <!--servlet config-->
+    <servlet>
+        <servlet-name>FacesServlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <init-param>
+            <param-name>load-on-startup</param-name>
+            <param-value>1</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FacesServlet</servlet-name>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
+    <!-- TAG LIBS -->
+    <!--<context-param>-->
+        <!--<param-name>javax.faces.FACELETS_LIBRARIES</param-name>-->
+        <!--<param-value>-->
+            <!--/WEB-INF/viettel-taglib.xml;-->
+            <!--/WEB-INF/spring-security-taglib.xml;-->
+            <!--/WEB-INF/primefaces-olympos.taglib.xml;-->
+        <!--</param-value>-->
+    <!--</context-param>-->
+
+    <!--Fix loi trung bean-->
+    <!--<context-param>-->
+        <!--<param-name>contextClass</param-name>-->
+        <!--<param-value>-->
+            <!--org.springframework.web.context.support.CbsXmlWebApplicationContext-->
+        <!--</param-value>-->
+    <!--</context-param>-->
+
+
+    <!--<servlet>-->
+        <!--<servlet-name>SimpleCaptcha</servlet-name>-->
+        <!--<servlet-class>com.viettel.fw.bean.SimpleCaptchaServlet</servlet-class>-->
+        <!--<init-param>-->
+            <!--<param-name>captcha-width</param-name>-->
+            <!--<param-value>200</param-value>-->
+        <!--</init-param>-->
+        <!--<init-param>-->
+            <!--<param-name>captcha-height</param-name>-->
+            <!--<param-value>75</param-value>-->
+        <!--</init-param>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>SimpleCaptcha</servlet-name>-->
+        <!--<url-pattern>/simpleCaptcha.png</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+    <mime-mapping>
+        <extension>ico</extension>
+        <mime-type>image/x-icon</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>woff</extension>
+        <mime-type>application/font-woff</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>woff2</extension>
+        <mime-type>application/font-woff2</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>ttf</extension>
+        <mime-type>application/font-sfnt</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>eot</extension>
+        <mime-type>application/vnd.ms-fontobject</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>otf</extension>
+        <mime-type>font/opentype</mime-type>
+    </mime-mapping>
+
+    <mime-mapping>
+        <extension>svg</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+
+</web-app>
