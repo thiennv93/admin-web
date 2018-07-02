@@ -12,6 +12,9 @@ public interface Constants {
 
     String DEFAULT_DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
     String DEFAULT_PAGE_FORMAT = "xhtml";
+    String MENU_LIST = "MENU_LIST";
+    String USER_TOKEN = "USER_TOKEN";
+    String REMOTE_GROWL = "remoteGlobalForm:remoteGrowl";
 
     interface InitialParams {
         String DISABLE_FILTER = "com.github.adminfaces.DISABLE_FILTER";

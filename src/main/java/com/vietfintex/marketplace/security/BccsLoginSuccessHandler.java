@@ -38,7 +38,7 @@ public class BccsLoginSuccessHandler implements AuthenticationSuccessHandler {
         if (urlBean == null) {
             CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
             if (principal != null) {
-                urlBean = (URLBean) principal.getPrincipals().get(1);
+//                urlBean = (URLBean) principal.getPrincipals().get(1);
             }
         }
 

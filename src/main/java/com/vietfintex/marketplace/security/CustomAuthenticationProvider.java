@@ -1,67 +1,68 @@
 package com.vietfintex.marketplace.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vietfintex.marketplace.Const;
+import com.vietfintex.marketplace.dto.ResponseDTO;
+import com.vietfintex.marketplace.dto.UserDTO;
+import com.vietfintex.marketplace.service.UserService;
+import com.vietfintex.marketplace.util.Constants;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.model.diagram.connector.Connector;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
-import java.util.Collection;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
-/**
- * Created by LamNV5 on 4/16/2015.
- */
+import static org.springframework.util.StringUtils.isEmpty;
+@Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
-
-    private static Logger logger = Logger
-            .getLogger(CustomAuthenticationProvider.class);
+    @Autowired
+    UserService userService;
+    private static Logger logger = Logger.getLogger(CustomAuthenticationProvider.class);
 
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
-//        if (authentication.getCredentials() == null) {
-//            throw new BadCredentialsException("Bad Credentials");
-//        }
-//        FacesContext facesContext = FacesContext.getCurrentInstance();
-//        ExternalContext extenalContext = facesContext.getExternalContext();
-//
-//        HttpServletRequest request = (HttpServletRequest) extenalContext.getRequest();
-//        HttpServletResponse httpServletResponse = (HttpServletResponse) extenalContext.getResponse();
-//        //thiendn1: make the buffer bufferPrincipal here
-//        //must not change
-//        CustomPrincipal principal = new CustomPrincipal();
-//        URLBean urlBean = (URLBean) request.getSession().getAttribute(Const.URL_BEAN);
-//        principal.getPrincipals().add(urlBean);
-//
-//        Connector cnn = new Connector(request, httpServletResponse);
-//        request.setAttribute("VSA-IsPassedVSAFilter", "True");
-//        try {
-//            if (!(cnn.getAuthenticate())) {
-//                throw new BadCredentialsException("Bad Credentials");
-//            }
-//        } catch (IOException e) {
-//            logger.fatal(e);
-//            throw new BadCredentialsException("Bad Credentials");
-//        }
-//
-//        UserToken userToken = (UserToken) request.getSession().getAttribute(
-//                CustomConnector.VSA_USER_TOKEN);
-//
-//        //x_1604_1: co che phan quyen sping
-//        List<GrantedAuthority> grantedAuths = new ArrayList<GrantedAuthority>();
-//        for (ObjectToken component : userToken.getComponentList()) {
-//            GrantedAuthorityPassport subComponent = new GrantedAuthorityPassport();
-//            BeanUtils.copyProperties(component, subComponent,
-//                    new String[]{"childObjects"});
-//
-//            grantedAuths.add(subComponent);
-//        }
-//
-//        principal.getPrincipals().add(0, userToken.getFullName());
-//        return new UsernamePasswordAuthenticationToken(principal, null, grantedAuths);
-        return new UsernamePasswordAuthenticationToken(null, null, null);
+        if (isEmpty(authentication.getCredentials()) || isEmpty(authentication.getName())) {
+            throw new BadCredentialsException("Bad Credentials");
+        }
+        String username = authentication.getName();
+        String password = authentication.getCredentials().toString();
+        Map<String, String> param = new HashMap<>();
+        param.put("username", username);
+        param.put("password", password);
+        ResponseDTO responseDTO = userService.login(param);
+        if (!responseDTO.isSuccess() || Objects.isNull(responseDTO.getObjectReturn())){
+            return null;
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        UserDTO userDTO = objectMapper.convertValue(responseDTO.getObjectReturn(), UserDTO.class);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext extenalContext = facesContext.getExternalContext();
+
+        HttpServletRequest request = (HttpServletRequest) extenalContext.getRequest();
+        request.getSession().setAttribute(Constants.USER_TOKEN, userDTO);
+        //make the buffer bufferPrincipal here
+        //must not change
+        CustomPrincipal principal = new CustomPrincipal();
+        URLBean urlBean = (URLBean) request.getSession().getAttribute(Const.URL_BEAN);
+        principal.getPrincipals().add(urlBean);
+
+        List<GrantedAuthority> grantedAuths = new ArrayList<>();
+        return new UsernamePasswordAuthenticationToken(principal, null, grantedAuths);
 
     }
 

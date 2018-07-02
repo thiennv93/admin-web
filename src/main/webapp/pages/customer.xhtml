@@ -1,0 +1,176 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+
+    <ui:define name="head-end">
+        <ui:param name="enableSlideMenu" value="false"/> <!-- disables slide menu (only on this page) on small screens -->
+        <ui:param name="autoShowNavbar" value="false"/> <!-- disables auto show navbar (only on this page) on small devices -->
+        <style type="text/css">
+            .header-right.ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+
+            .year-spinner input {
+                width: 100px
+            }
+
+            .ui-button-text-only .ui-button-text {
+                padding: 0.3em 0.4em;
+            }
+
+            .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+                display: none;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">
+        Thông tin khách hàng
+    </ui:define>
+
+    <ui:define name="description">
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb/>
+        <p:panel styleClass="card box-info ui-g-12" header="Kết quả tìm kiếm">
+            <h:form prependId="false" id="usersForm">
+                <p:growl id="growl" showDetail="true" sticky="true" />
+                <div id="datatable" class="ui-g-9">
+                    <p:dataTable id="usersTable" var="user" value="#{userController.lazyListItem}" widgetVar="usersTable"
+                                 paginator="true" styleClass="header-right"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15" rows="10" rowKey="#{user.userId}"
+                                 emptyMessage="Không có dữ liệu" stickyHeader="true"
+                                 lazy="true" reflow="true" resizableColumns="true"
+                                 filteredValue="#{userController.filteredUserList}">
+
+                        <!--<f:facet name="header">-->
+                            <!--<p:outputPanel>-->
+                                <!--<h:outputText value="#{adm['label.customer.searchForAll']}"/>-->
+                                <!--<p:spacer height="10"/>-->
+                                <!--<p:inputText id="globalFilter" onkeyup="PF('usersTable').filter()" style="width:150px"-->
+                                             <!--placeholder="Enter keyword"/>-->
+                            <!--</p:outputPanel>-->
+                        <!--</f:facet>-->
+                        <f:facet name="header">
+
+                            <p:commandButton value="#{adm['label.common.action.add']}"
+                                             actionListener="#{userController.prepareDisplayMode(userController.MODE_ADD, false)}"
+                                             process="@this"
+                                             oncomplete="if(!args.validationFailed) PF('dlgEdit').show()"
+                                             styleClass="btn-primary"
+                                             icon="fa fa-plus White"
+                                             update="@([id$=dlgEditForm]), @([id$=dlgEdit])">
+                            </p:commandButton>
+
+                            <p:commandButton id="toggler" type="button" value="View" style="float:right" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="usersTable" trigger="toggler" />
+                        </f:facet>
+                        <p:column width="5%" selectionMode="multiple"
+                                  styleClass="align-center"
+                                  priority="1"/>
+
+                        <p:column width="360px" sortBy="#{user.userId}" headerText="#{adm['label.customer.header.userId']}">
+                            <!--<p:link value="#{user.userId}" outcome="/pages/index.xhtml">-->
+                                <!--<f:param name="userId" value="#{user.userId}"/>-->
+                            <!--</p:link>-->
+                            <p:commandLink value="#{user.userId}" actionListener="#{userController.doPrepareAction(user, userController.ACTION_EDIT)}"
+                                           oncomplete="if(!args.validationFailed) PF('dlgEdit').show()"
+                                           update="@([id$=dlgEditForm]), @([id$=dlgEdit])"/>
+                        </p:column>
+                        <p:column sortBy="#{user.userName}" headerText="#{adm['label.customer.header.userName']}">
+                            <h:outputText value="#{user.userName}"/>
+                        </p:column>
+                        <p:column sortBy="#{user.email}" headerText="#{adm['label.customer.header.email']}">
+                            <h:outputText value="#{user.email}"/>
+                        </p:column>
+                        <p:column headerText="#{adm['label.customer.header.phone']}">
+                            <h:outputText value="#{user.phone}"/>
+                        </p:column>
+
+                        <p:column headerText="#{adm['label.customer.header.birthDay']}" >
+                            <h:outputText value="#{user.birthday}"/>
+                        </p:column>
+
+                        <p:column headerText="#{adm['label.customer.header.status']}" >
+                            <p:selectOneMenu id="status" value="#{user.status}" style="min-width: 60px">
+                                <f:selectItem itemLabel="" itemValue="" />
+                                <f:selectItems value="#{userController.statusList}" var="item" itemValue="#{item.status}" itemLabel="#{item.name}" />
+                                <p:ajax event="change" listener="#{userController.onChangeStatus(user.userId, user.status)}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+
+                        <p:column style="width:32px">
+                            <p:rowEditor />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+                <p:panel styleClass="ui-g-3" header="Tìm kiếm dữ liệu">
+                    <p:panelGrid columns="1"
+                                 layout="grid" styleClass="ui-fluid card">
+                        <p:outputLabel for="username" value="#{adm['label.customer.header.userName']}"/>
+                        <p:inputText id="username" value="#{userController.searchDTO.userName}"/>
+                        <p:outputLabel for="emailSearch" value="#{adm['label.customer.header.email']}"/>
+                        <p:inputText id="emailSearch" value="#{userController.searchDTO.email}"/>
+                        <p:outputLabel for="phone" value="#{adm['label.customer.header.phone']}"/>
+                        <p:inputText id="phone" value="#{userController.searchDTO.phone}"/>
+
+                        <p:commandButton value="#{adm['label.common.action.search']}" styleClass="btn-primary"
+                                         icon="fa fa-search White"
+                                         action="#{userController.doAction(userController.ACTION_SEARCH)}"
+                                         update="@([id$=usersTable])"
+                        />
+                    </p:panelGrid>
+                </p:panel>
+                <p:spacer/>
+
+            </h:form>
+        </p:panel>
+
+        <p:dialog id="dlgEdit"
+                  widgetVar="dlgEdit" appendTo="@(body)" closable="true"
+                  closeOnEscape="true" dynamic="true"
+                  header="#{userController.displayMode==userController.MODE_EDIT ? adm['label.customer.header.dialogEdit'] : adm['label.customer.header.dialogAdd']}"
+                  modal="true">
+
+            <h:form id="dlgEditForm">
+                <p:focus for="dlgEditForm"/>
+
+                <p:spacer height="15px"/>
+                <div class="ui-fluid ui-flat">
+                    <p:panel header="#{adm['label.customer.header.dialog.infoUser']}">
+                        <p:panelGrid columns="4" columnClasses="ui-grid-col-4,ui-grid-col-8,ui-grid-col-4,ui-grid-col-8"
+                                     layout="grid" styleClass="ui-fluid card">
+                            <p:outputLabel for="userName" value="#{adm['label.customer.header.userName']}"/>
+                            <p:inputText id="userName" value="#{userController.userDTO.userName}"/>
+
+                            <p:outputLabel for="email" value="#{adm['label.customer.header.email']}"/>
+                            <p:inputText id="email" value="#{userController.userDTO.email}"/>
+
+                            <p:outputLabel for="password" value="#{adm['label.customer.header.password']}"/>
+                            <p:password id="password" value="#{userController.userDTO.password}"/>
+
+                            <p:outputLabel for="confirmPassword" value="#{adm['label.customer.header.confirmPassword']}"/>
+                            <p:password id="confirmPassword" value="#{userController.userDTO.password}"/>
+
+                            <p:outputLabel for="sex" value="#{adm['label.customer.header.sex']}"/>
+                            <p:selectOneRadio id="sex" value="#{userController.userDTO.sex}" layout="responsive" columns="2">
+                                <f:selectItem itemValue="F" itemLabel="#{adm['label.customer.header.sex.female']}"/>
+                                <f:selectItem itemValue="M" itemLabel="#{adm['label.customer.header.sex.male']}"/>
+                            </p:selectOneRadio>
+                        </p:panelGrid>
+                    </p:panel>
+                </div>
+                <div class="EmptyBox10"></div>
+
+            </h:form>
+
+        </p:dialog>
+    </ui:define>
+
+</ui:composition>

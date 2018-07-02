@@ -12,6 +12,14 @@
         <pattern value="/logout"/>
         <view-id value="/pages/logout.xhtml"/>
     </url-mapping>
+    <url-mapping id="customer-manager">
+        <pattern value="/customer-manager"/>
+        <view-id value="/pages/customer.xhtml"/>
+    </url-mapping>
+    <url-mapping id="404">
+        <pattern value="/404"/>
+        <view-id value="/pages/404.xhtml"/>
+    </url-mapping>
     <url-mapping id="error">
         <pattern value="/error.jsf"/>
         <view-id value="/Error.xhtml"/>

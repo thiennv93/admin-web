@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-        >
+                xmlns:pa="http://primefaces.org/thiennv/admin">
 
-     <ul class="sidebar-menu">
-        <li>
-            <p:link href="/home" onclick="clearBreadCrumbs()">
-                <i class="fa fa-home"></i>
-                <span>Home</span>
-            </p:link>
-        </li>
-        <li class="header">
-            General
-        </li>
-        <li>
-            <p:link href="/car-list.xhtml">
-                <i class="fa fa-car"></i>
-                <span>Cars</span>
-            </p:link>
-        </li>
+    <style type="text/css">
 
-    </ul>
+        @-moz-document url-prefix() {
+            li span.label-danger {
+                margin-top: -20px;
+            }
+        }
+    </style>
+
+    <h:form>
+        <pa:menu model="#{menuBean.model}"/>
+    </h:form>
+
+    <script type="text/javascript">
+        if (isMobile()) {
+            $('ul.sidebar-menu a.ui-link').click(function () {
+                $(this).prop('disabled', true);
+                showBar();
+            })
+        }
+    </script>
 
 </ui:composition>

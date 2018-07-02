@@ -1,5 +1,7 @@
 package com.vietfintex.marketplace.controller;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -10,6 +12,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by rmpestano on 12/20/14.
@@ -26,7 +31,7 @@ import java.io.Serializable;
 @ViewScoped
 @ManagedBean
 //@Specializes
-public class LogonMB implements Serializable {
+public class LoginController implements Serializable {
 
     private String currentUser;
     private String email;
@@ -42,7 +47,9 @@ public class LogonMB implements Serializable {
 
         dispatcher.forward((ServletRequest) context.getRequest(), (ServletResponse) context.getResponse());
 
+        SecurityContextHolder.getContext().getAuthentication();
         FacesContext.getCurrentInstance().responseComplete();
+
     }
 
     public boolean isLoggedIn() {

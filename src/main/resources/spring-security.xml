@@ -60,13 +60,15 @@
         <beans:property name="filterProcessesUrl" value="/j_spring_security_check" />
         <beans:property name="authenticationFailureHandler" ref="securityLoginFailureHandler" />
         <beans:property name="authenticationSuccessHandler" ref="securityLoginSuccessHandler" />
+        <beans:property name="usernameParameter" value="loginForm:username"/>
+        <beans:property name="passwordParameter" value="loginForm:password"/>
     </beans:bean>
 
     <beans:bean id="securityLoginSuccessHandler" class="com.vietfintex.marketplace.security.BccsLoginSuccessHandler"/>
 
     <beans:bean id="securityLoginFailureHandler" class="com.vietfintex.marketplace.security.SecurityLoginFailureHandler" />
 
-    <beans:bean id="customAuthenticationProvider" class="com.vietfintex.marketplace.security.CustomAuthenticationProvider"/>
+    <!--<beans:bean id="customAuthenticationProvider" class="com.vietfintex.marketplace.security.CustomAuthenticationProvider"/>-->
 
 
     <authentication-manager alias="authenticationManager">
