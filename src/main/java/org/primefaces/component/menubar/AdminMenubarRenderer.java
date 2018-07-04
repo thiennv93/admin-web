@@ -79,7 +79,7 @@ public class AdminMenubarRenderer extends BaseMenuRenderer {
                     writer.startElement("li", null);
                     writer.writeAttribute("id", menuItem.getClientId(), null);
 //                    writer.writeAttribute("class", containerStyleClass, null);
-                    writer.writeAttribute("class", "treeview", null);
+//                    writer.writeAttribute("class", "treeview", null);
 //                    writer.writeAttribute("role", "menuitem", null);
                     if (containerStyle != null) {
                         writer.writeAttribute("style", containerStyle, null);

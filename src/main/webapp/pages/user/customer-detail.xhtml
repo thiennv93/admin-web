@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+
+    <ui:define name="head-end">
+        <ui:param name="enableSlideMenu" value="false"/> <!-- disables slide menu (only on this page) on small screens -->
+        <ui:param name="autoShowNavbar" value="false"/> <!-- disables auto show navbar (only on this page) on small devices -->
+        <style type="text/css">
+            .header-right.ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+
+            .year-spinner input {
+                width: 100px
+            }
+
+            .ui-button-text-only .ui-button-text {
+                padding: 0.3em 0.4em;
+            }
+
+            .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+                display: none;
+            }
+        </style>
+    </ui:define>
+    <ui:param name="title" value="Chỉnh sửa thông tin khách hàng"/>
+    <ui:define name="body">
+        <p:panel styleClass="card">
+            <h:form>
+                <p:growl id="messages" showDetail="true"/>
+
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton type="button" value="New" icon="fa fa-file-text-o" styleClass="btn-primary"/>
+
+                        <p:commandButton type="button" value="Open" icon="fa  fa-folder-open-o" styleClass="btn-info"/>
+
+                        <span style="padding: 5px;color: darkgray">
+                            <i class="fa fa-ellipsis-v" />
+                        </span>
+
+                        <p:commandButton type="button" title="Save" icon="fa fa-save" styleClass="btn-success"/>
+                        <p:commandButton type="button" title="Delete" icon="fa fa-trash" styleClass="btn-danger" />
+                        <p:commandButton type="button" title="Print" icon="fa fa-print"/>
+                    </f:facet>
+
+                    <f:facet name="right">
+                        <p:menuButton value="Options" styleClass="btn-danger">
+                            <p:menuitem value="Save" actionListener="#{toolbarMB.save}" update="messages"
+                                        icon="fa fa-save"/>
+                            <p:menuitem value="Update" actionListener="#{toolbarMB.update}" update="messages"
+                                        icon="fa fa-refresh"/>
+                            <p:menuitem value="Delete" actionListener="#{toolbarMB.delete}" ajax="false"
+                                        icon="fa fa-close"/>
+                            <p:menuitem value="Homepage" url="http://www.primefaces.org" icon="fa fa-home"/>
+                        </p:menuButton>
+                    </f:facet>
+
+                </p:toolbar>
+            </h:form>
+            <p:tabView>
+                <p:tab title="toolbar.xhtml">
+                <pre>
+               <code class="language-html">
+                   <h:outputText value="#{sourceCodeMB.getPageSource()}" escape="true"/>
+               </code>
+                </pre>
+                </p:tab>
+
+                <p:tab title="TabViewMB.java">
+                <pre>
+               <code class="language-java">
+                   <h:outputText value="#{sourceCodeMB.getJavaSource('com.github.adminfaces.showcase.bean.ToolbarMB')}"
+                                 escape="false"/>
+               </code>
+                </pre>
+                </p:tab>
+            </p:tabView>
+        </p:panel>
+    </ui:define>
+
+    <ui:define name="code">
+    </ui:define>
+
+</ui:composition>

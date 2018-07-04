@@ -16,6 +16,10 @@
         <pattern value="/customer-manager"/>
         <view-id value="/pages/customer.xhtml"/>
     </url-mapping>
+    <url-mapping id="customer-detail">
+        <pattern value="/customer-detail"/>
+        <view-id value="/pages/user/customer-detail.xhtml"/>
+    </url-mapping>
     <url-mapping id="404">
         <pattern value="/404"/>
         <view-id value="/pages/404.xhtml"/>

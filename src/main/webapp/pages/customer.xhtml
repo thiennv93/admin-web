@@ -76,12 +76,12 @@
                                   priority="1"/>
 
                         <p:column width="360px" sortBy="#{user.userId}" headerText="#{adm['label.customer.header.userId']}">
-                            <!--<p:link value="#{user.userId}" outcome="/pages/index.xhtml">-->
-                                <!--<f:param name="userId" value="#{user.userId}"/>-->
-                            <!--</p:link>-->
-                            <p:commandLink value="#{user.userId}" actionListener="#{userController.doPrepareAction(user, userController.ACTION_EDIT)}"
-                                           oncomplete="if(!args.validationFailed) PF('dlgEdit').show()"
-                                           update="@([id$=dlgEditForm]), @([id$=dlgEdit])"/>
+                            <p:link value="#{user.userId}" outcome="/pages/user/customer-detail.xhtml">
+                                <f:param name="userId" value="#{user.userId}"/>
+                            </p:link>
+                            <!--<p:commandLink value="#{user.userId}" actionListener="#{userController.doPrepareAction(user, userController.ACTION_EDIT)}"-->
+                                           <!--oncomplete="if(!args.validationFailed) PF('dlgEdit').show()"-->
+                                           <!--update="@([id$=dlgEditForm]), @([id$=dlgEdit])"/>-->
                         </p:column>
                         <p:column sortBy="#{user.userName}" headerText="#{adm['label.customer.header.userName']}">
                             <h:outputText value="#{user.userName}"/>
@@ -132,45 +132,6 @@
             </h:form>
         </p:panel>
 
-        <p:dialog id="dlgEdit"
-                  widgetVar="dlgEdit" appendTo="@(body)" closable="true"
-                  closeOnEscape="true" dynamic="true"
-                  header="#{userController.displayMode==userController.MODE_EDIT ? adm['label.customer.header.dialogEdit'] : adm['label.customer.header.dialogAdd']}"
-                  modal="true">
-
-            <h:form id="dlgEditForm">
-                <p:focus for="dlgEditForm"/>
-
-                <p:spacer height="15px"/>
-                <div class="ui-fluid ui-flat">
-                    <p:panel header="#{adm['label.customer.header.dialog.infoUser']}">
-                        <p:panelGrid columns="4" columnClasses="ui-grid-col-4,ui-grid-col-8,ui-grid-col-4,ui-grid-col-8"
-                                     layout="grid" styleClass="ui-fluid card">
-                            <p:outputLabel for="userName" value="#{adm['label.customer.header.userName']}"/>
-                            <p:inputText id="userName" value="#{userController.userDTO.userName}"/>
-
-                            <p:outputLabel for="email" value="#{adm['label.customer.header.email']}"/>
-                            <p:inputText id="email" value="#{userController.userDTO.email}"/>
-
-                            <p:outputLabel for="password" value="#{adm['label.customer.header.password']}"/>
-                            <p:password id="password" value="#{userController.userDTO.password}"/>
-
-                            <p:outputLabel for="confirmPassword" value="#{adm['label.customer.header.confirmPassword']}"/>
-                            <p:password id="confirmPassword" value="#{userController.userDTO.password}"/>
-
-                            <p:outputLabel for="sex" value="#{adm['label.customer.header.sex']}"/>
-                            <p:selectOneRadio id="sex" value="#{userController.userDTO.sex}" layout="responsive" columns="2">
-                                <f:selectItem itemValue="F" itemLabel="#{adm['label.customer.header.sex.female']}"/>
-                                <f:selectItem itemValue="M" itemLabel="#{adm['label.customer.header.sex.male']}"/>
-                            </p:selectOneRadio>
-                        </p:panelGrid>
-                    </p:panel>
-                </div>
-                <div class="EmptyBox10"></div>
-
-            </h:form>
-
-        </p:dialog>
     </ui:define>
 
 </ui:composition>
