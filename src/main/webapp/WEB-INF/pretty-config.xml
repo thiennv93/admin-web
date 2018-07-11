@@ -20,6 +20,22 @@
         <pattern value="/customer-detail"/>
         <view-id value="/pages/user/customer-detail.xhtml"/>
     </url-mapping>
+    <url-mapping id="product-feature">
+        <pattern value="/product-feature"/>
+        <view-id value="/pages/product/product-feature.xhtml"/>
+    </url-mapping>
+    <url-mapping id="product-option">
+        <pattern value="/product-option"/>
+        <view-id value="/pages/product/product-option.xhtml"/>
+    </url-mapping>
+    <url-mapping id="product">
+        <pattern value="/product"/>
+        <view-id value="/pages/product/product.xhtml"/>
+    </url-mapping>
+    <url-mapping id="order">
+        <pattern value="/order"/>
+        <view-id value="/pages/order/order.xhtml"/>
+    </url-mapping>
     <url-mapping id="404">
         <pattern value="/404"/>
         <view-id value="/pages/404.xhtml"/>

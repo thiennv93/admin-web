@@ -1,0 +1,197 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://github.com/adminfaces"
+                template="#{layoutMB.template}">
+
+
+    <ui:define name="head-end">
+        <ui:param name="enableSlideMenu"
+                  value="false"/> <!-- disables slide menu (only on this page) on small screens -->
+        <ui:param name="autoShowNavbar"
+                  value="false"/> <!-- disables auto show navbar (only on this page) on small devices -->
+        <style type="text/css">
+            .header-right.ui-datatable .ui-datatable-header {
+                text-align: right !important;
+            }
+
+            .year-spinner input {
+                width: 100px
+            }
+
+            .ui-button-text-only .ui-button-text {
+                padding: 0.3em 0.4em;
+            }
+
+            .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-chkbox {
+                display: none;
+            }
+        </style>
+    </ui:define>
+    <!--<ui:param name="title" value="Pr"/>-->
+    <ui:define name="body">
+        <p:panel styleClass="card">
+            <h:form>
+                <p:growl id="messages" showDetail="true"/>
+
+                <p:toolbar>
+                    <f:facet name="right">
+                        <p:commandButton actionListener="" id="iconOnly"
+                                         icon="fa fa-plus" title="Add" styleClass="btn-primary"/>
+                        <p:menuButton value="Options" styleClass="btn-danger">
+                            <p:menuitem value="Delete" actionListener="#{toolbarMB.delete}" ajax="false"
+                                        icon="fa fa-close"/>
+                        </p:menuButton>
+                    </f:facet>
+
+                </p:toolbar>
+            </h:form>
+            <p:tabView>
+                <p:tab title="Feature">
+                    <pre>
+                        <p:panel styleClass="card box-info ui-g-12" >
+                            <h:form prependId="false" id="featureForm">
+                                <p:growl id="growl" showDetail="true" sticky="true"/>
+                                <div id="datatable" class="ui-g-9">
+                                    <p:dataTable id="featureTable" var="feature" value="#{productFeatureController.lazyListItem}"
+                                                 widgetVar="featureTable"
+                                                 paginator="true" styleClass="header-right"
+                                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 rowsPerPageTemplate="5,10,15" rows="10" rowKey="#{feature.featureId}"
+                                                 emptyMessage="Không có dữ liệu" stickyHeader="true"
+                                                 lazy="true" reflow="true" resizableColumns="true"
+                                                 filteredValue="#{productFeatureController.filteredFeatureList}">
+
+                                        <f:facet name="header">
+                                            <p:commandButton id="toggler" type="button" value="View" style="float:right"
+                                                             icon="ui-icon-calculator"/>
+                                            <p:columnToggler datasource="featureTable" trigger="toggler"/>
+                                        </f:facet>
+                                        <p:column width="5%" selectionMode="multiple"
+                                                  styleClass="align-center"
+                                                  priority="1"/>
+
+                                        <p:column width="360px" sortBy="#{feature.description}"
+                                                  headerText="Feature">
+                                            <p:link value="#{feature.description}" outcome="/pages/product/feature-detail.xhtml">
+                                                <f:param name="userId" value="#{feature.featureId}"/>
+                                            </p:link>
+                                        </p:column>
+                                        <p:column sortBy="#{feature.parentFeatureName}" headerText="Group">
+                                            <p:commandLink value="#{feature.parentFeatureName}">
+
+                                            </p:commandLink>
+                                        </p:column>
+
+                                        <p:column headerText="#{adm['label.customer.header.status']}">
+                                            <p:selectOneMenu id="status" value="#{feature.status}" style="min-width: 60px">
+                                                <f:selectItem itemLabel="" itemValue=""/>
+                                                <f:selectItems value="#{productFeatureController.statusList}" var="item"
+                                                               itemValue="#{item.status}" itemLabel="#{item.name}"/>
+                                                <p:ajax event="change"
+                                                        listener="#{userController.onChangeStatus(user.userId, user.status)}"/>
+                                            </p:selectOneMenu>
+                                        </p:column>
+
+                                        <p:column style="width:32px">
+                                            <p:rowEditor/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                                <p:panel styleClass="ui-g-3" header="Tìm kiếm dữ liệu">
+                                    <p:panelGrid columns="1"
+                                                 layout="grid" styleClass="ui-fluid card">
+                                        <p:outputLabel for="featureName" value="Tên feature"/>
+                                        <p:inputText id="featureName" value="#{productFeatureController.searchDTO.description}"/>
+                                        <p:outputLabel for="groupFeatureName" value="Nhóm feature"/>
+                                        <p:inputText id="groupFeatureName" value="#{productFeatureController.searchDTO.parentFeatureName}"/>
+
+                                        <p:commandButton value="#{adm['label.common.action.search']}" styleClass="btn-primary"
+                                                         icon="fa fa-search White"
+                                                         action="#{productFeatureController.doAction(userController.ACTION_SEARCH)}"
+                                                         update="@([id$=featureTable])"
+                                        />
+                                    </p:panelGrid>
+                                </p:panel>
+                                <p:spacer/>
+
+                            </h:form>
+                        </p:panel>
+                    </pre>
+                </p:tab>
+
+                <p:tab title="Feature Group">
+                    <pre>
+
+                        <p:panel styleClass="card box-info ui-g-12" >
+                            <h:form prependId="false" id="groupFeatureForm">
+                                <p:growl id="growlGroup" showDetail="true" sticky="true"/>
+                                <div id="datatableGroup" class="ui-g-9">
+                                    <p:dataTable id="groupFeatureTable" var="feature" value="#{productFeatureController.lazyListItemGroupFeature}"
+                                                 widgetVar="groupFeatureTable"
+                                                 paginator="true" styleClass="header-right"
+                                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 rowsPerPageTemplate="5,10,15" rows="10" rowKey="#{feature.featureId}"
+                                                 emptyMessage="Không có dữ liệu" stickyHeader="true"
+                                                 lazy="true" reflow="true" resizableColumns="true">
+
+                                        <f:facet name="header">
+                                            <p:commandButton id="togglerGroup" type="button" value="View" style="float:right"
+                                                             icon="ui-icon-calculator"/>
+                                            <p:columnToggler datasource="groupFeatureTable" trigger="toggler"/>
+                                        </f:facet>
+                                        <p:column width="5%" selectionMode="multiple"
+                                                  styleClass="align-center"
+                                                  priority="1"/>
+
+                                        <p:column width="360px" sortBy="#{feature.description}"
+                                                  headerText="Feature">
+                                            <p:link value="#{feature.description}" outcome="/pages/product/feature-detail.xhtml">
+                                                <f:param name="userId" value="#{feature.featureId}"/>
+                                            </p:link>
+                                        </p:column>
+
+                                        <p:column headerText="#{adm['label.customer.header.status']}">
+                                            <p:selectOneMenu id="statusGroup" value="#{feature.status}" style="min-width: 60px">
+                                                <f:selectItem itemLabel="" itemValue=""/>
+                                                <f:selectItems value="#{productFeatureController.statusList}" var="item"
+                                                               itemValue="#{item.status}" itemLabel="#{item.name}"/>
+                                                <p:ajax event="change"
+                                                        listener="#{userController.onChangeStatus(user.userId, user.status)}"/>
+                                            </p:selectOneMenu>
+                                        </p:column>
+
+                                        <p:column style="width:32px">
+                                            <p:rowEditor/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+                                <p:panel styleClass="ui-g-3" header="Tìm kiếm dữ liệu">
+                                    <p:panelGrid columns="1"
+                                                 layout="grid" styleClass="ui-fluid card">
+                                        <p:outputLabel for="featureGroupName" value="Tên Group Feature"/>
+                                        <p:inputText id="featureGroupName" value="#{productFeatureController.searchDTO.description}"/>
+
+                                        <p:commandButton value="#{adm['label.common.action.search']}" styleClass="btn-primary"
+                                                         icon="fa fa-search White"
+                                                         action="#{productFeatureController.doAction(userController.ACTION_SEARCH)}"
+                                                         update="@([id$=featureTable])"
+                                        />
+                                    </p:panelGrid>
+                                </p:panel>
+                                <p:spacer/>
+
+                            </h:form>
+                        </p:panel>
+                    </pre>
+                </p:tab>
+            </p:tabView>
+        </p:panel>
+    </ui:define>
+
+    <ui:define name="code">
+    </ui:define>
+
+</ui:composition>

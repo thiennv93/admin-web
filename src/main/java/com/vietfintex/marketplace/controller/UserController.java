@@ -45,7 +45,7 @@ public class UserController extends AbstractController<UserDTO, UserDTO> impleme
     private UserDTO userDTO;
     @PostConstruct
     public void init(){
-        ResponseDTO response = statusService.search();
+        ResponseDTO response = statusService.search("user");
         if (response.isSuccess() && nonNull(response.getObjectReturn())){
             statusList = (List<StatusDTO>) response.getObjectReturn();
         }else{
